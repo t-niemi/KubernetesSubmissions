@@ -1,3 +1,3 @@
-## Log output program
+## todo app
 
-Run with `docker run --rm --init tniemi/dwk-todo-app`
+Deploy with `kubectl apply -f manifests/deployment.yaml`
