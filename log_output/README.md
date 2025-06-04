@@ -1,3 +1,3 @@
 ## Log output program
 
-Run with `docker run --rm --init tniemi/dwk-log-output`
+Deploy with `kubectl apply -f manifests/deployment.yaml`
