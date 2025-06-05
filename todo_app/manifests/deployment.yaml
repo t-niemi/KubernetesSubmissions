@@ -14,4 +14,4 @@ spec:
     spec:
       containers:
         - name: todo-app
-          image: tniemi/dwk-todo-app:1.2
+          image: tniemi/dwk-todo-app:1.5
