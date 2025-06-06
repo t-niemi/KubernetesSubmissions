@@ -1,0 +1,35 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: dwk-ingress
+  annotations:
+    traefik.ingress.kubernetes.io/router.middlewares: default-mw-strip@kubernetescrd
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: log-output-svc
+            port:
+              number: 2345
+      - path: /pingpong
+        pathType: Prefix
+        backend:
+          service:
+            name: ping-pong-svc
+            port:
+              number: 2345
+---
+# Middleware
+# Strip prefix /pingpong
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: mw-strip
+spec:
+  stripPrefix:
+    prefixes:
+      - /pingpong
