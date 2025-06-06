@@ -1,7 +1,8 @@
-import { v4 as uuidv4 } from "uuid";
+import app from "./app";
+import "dotenv/config";
 
-const stamp = uuidv4();
+const PORT = process.env.PORT ? parseInt(process.env.PORT) : 3000;
 
-var myInt = setInterval(function () {
-  console.log(new Date().toISOString(), stamp);
-}, 5000);
+app.listen(PORT, () => {
+  console.log(`Server started in port ${PORT}`);
+});
