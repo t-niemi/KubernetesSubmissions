@@ -11,3 +11,4 @@
 - [1.7.](https://github.com/t-niemi/KubernetesSubmissions/tree/1.7/log_output)
 - [1.8.](https://github.com/t-niemi/KubernetesSubmissions/tree/1.8/todo_app)
 - [1.9.](https://github.com/t-niemi/KubernetesSubmissions/tree/1.9/ping_pong)
+- [1.10.](https://github.com/t-niemi/KubernetesSubmissions/tree/1.10/log_output)
