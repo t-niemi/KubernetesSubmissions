@@ -15,14 +15,19 @@ spec:
       volumes: # Define volume
         - name: shared-log-output
           emptyDir: {}
+        - name: shared-ping-pong-output
+          persistentVolumeClaim:
+            claimName: ping-pong-claim
       containers:
         - name: log-output-generator
-          image: tniemi/dwk-log-output-generator:1.10
+          image: tniemi/dwk-log-output-generator:1.11
           volumeMounts:
             - name: shared-log-output
               mountPath: /app/files
         - name: log-output-server
-          image: tniemi/dwk-log-output-server:1.10
+          image: tniemi/dwk-log-output-server:1.11
           volumeMounts:
             - name: shared-log-output
               mountPath: /app/files
+            - name: shared-ping-pong-output
+              mountPath: /app/pingpong

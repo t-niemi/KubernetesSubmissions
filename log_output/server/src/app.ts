@@ -16,15 +16,22 @@ const fileExists = async (path: fs.PathLike) => {
 
 app.get("/", async (_req, res) => {
   try {
-    if (!(await fileExists("files/out.txt"))) {
+    if (
+      !(await fileExists("files/out.txt")) ||
+      !(await fileExists("pingpong/out.txt"))
+    ) {
       res.send("");
       return;
     }
-    const data = (await fs.promises.readFile("files/out.txt", "utf-8")).split(
+    const status = (await fs.promises.readFile("files/out.txt", "utf-8")).split(
       /\r?\n/
     );
-    //res.send(data.map((item) => "<div>" + item).join("</div>"));
-    res.send(data.join("<br/>"));
+    if (status.length < 2) {
+      res.send("");
+      return;
+    }
+    const pings = await fs.promises.readFile("pingpong/out.txt", "utf-8");
+    res.send(status[status.length - 2] + "<br/>" + "Ping / Pongs: " + pings);
   } catch (err) {
     console.error(err);
   }
