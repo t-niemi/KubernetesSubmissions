@@ -1,25 +1,29 @@
 import express from "express";
-import fs from "node:fs";
+//import fs from "node:fs";
 
 const app = express();
 app.use(express.json());
 
 let counter = 0;
 
-const writePongs = () => {
+/*const writePongs = () => {
   try {
     fs.mkdirSync("files", { recursive: true });
     fs.writeFileSync("/app/files/out.txt", counter.toString());
   } catch (err) {
     console.error(err);
   }
-};
+};*/
 
-writePongs();
+//writePongs();
 
 app.get("/", (_req, res) => {
   res.send("pong " + counter++);
-  writePongs();
+  //writePongs();
+});
+
+app.get("/pings", (_req, res) => {
+  res.send(counter);
 });
 
 export default app;

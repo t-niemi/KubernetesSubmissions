@@ -17,8 +17,8 @@ const fileExists = async (path: fs.PathLike) => {
 app.get("/", async (_req, res) => {
   try {
     if (
-      !(await fileExists("files/out.txt")) ||
-      !(await fileExists("pingpong/out.txt"))
+      !(await fileExists("files/out.txt")) //||
+      //!(await fileExists("pingpong/out.txt"))
     ) {
       res.send("");
       return;
@@ -30,7 +30,9 @@ app.get("/", async (_req, res) => {
       res.send("");
       return;
     }
-    const pings = await fs.promises.readFile("pingpong/out.txt", "utf-8");
+    //const pings = await fs.promises.readFile("pingpong/out.txt", "utf-8");
+    const response = await fetch("http://ping-pong-svc:2345/pings");
+    const pings = await response.text();
     res.send(status[status.length - 2] + "<br/>" + "Ping / Pongs: " + pings);
   } catch (err) {
     console.error(err);
