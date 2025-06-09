@@ -33,7 +33,7 @@ function App() {
   };
 
   const handleTodoChange = (event: React.FormEvent<HTMLInputElement>) => {
-    setNewTodo(event.currentTarget.value.substring(0, 10));
+    setNewTodo(event.currentTarget.value.substring(0, 140));
   };
 
   return (
