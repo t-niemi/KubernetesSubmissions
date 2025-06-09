@@ -12,6 +12,13 @@ spec:
       labels:
         app: todo-app
     spec:
+      volumes:
+        - name: todo-app-output
+          persistentVolumeClaim:
+            claimName: todo-app-claim
       containers:
         - name: todo-app
-          image: tniemi/dwk-todo-app:1.5
+          image: tniemi/dwk-todo-app:1.11
+          volumeMounts:
+            - name: todo-app-output
+              mountPath: /app/files
