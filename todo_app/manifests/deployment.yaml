@@ -18,7 +18,7 @@ spec:
             claimName: todo-app-claim
       containers:
         - name: todo-app
-          image: tniemi/dwk-todo-app:1.11
+          image: tniemi/dwk-todo-app:1.13
           volumeMounts:
             - name: todo-app-output
               mountPath: /app/files
