@@ -18,7 +18,25 @@ spec:
             claimName: todo-app-claim
       containers:
         - name: todo-app
-          image: tniemi/dwk-todo-app:1.13
+          image: tniemi/dwk-todo-app:2.2
           volumeMounts:
             - name: todo-app-output
               mountPath: /app/files
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: todo-backend-dep
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: todo-backend
+  template:
+    metadata:
+      labels:
+        app: todo-backend
+    spec:
+      containers:
+        - name: todo-backend
+          image: tniemi/dwk-todo-backend:2.2

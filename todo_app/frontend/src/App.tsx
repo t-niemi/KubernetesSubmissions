@@ -1,26 +1,28 @@
 //import { useState, useEffect } from "react";
-import { useState, type SyntheticEvent } from "react";
+import { useEffect, useState, type SyntheticEvent } from "react";
 import "./App.css";
+import axios, { AxiosError } from "axios";
 //import apiClient from "./utils/apiClient";
 
-const TODOS = [
-  {
-    id: 1,
-    content: "Learn JavaScript",
-  },
-  {
-    id: 2,
-    content: "Learn React",
-  },
-  {
-    id: 3,
-    content: "Build a project",
-  },
-];
+interface Todo {
+  id: number;
+  content: string;
+}
 
 function App() {
-  const [todos, setTodos] = useState(TODOS);
+  const [todos, setTodos] = useState([] as Todo[]);
   const [newTodo, setNewTodo] = useState("");
+
+  useEffect(() => {
+    axios
+      .get<Todo[]>("/todos")
+      .then((response) => {
+        setTodos(response.data);
+      })
+      .catch((error: AxiosError) => {
+        console.log(error.message);
+      });
+  }, []);
 
   const addTodo = (event: SyntheticEvent) => {
     event.preventDefault();
@@ -28,8 +30,15 @@ function App() {
       id: todos.length + 1,
       content: newTodo,
     };
-    setTodos(todos.concat(todo));
-    setNewTodo("");
+    axios
+      .post<Todo>("/todos", todo)
+      .then((response) => {
+        setTodos(todos.concat(response.data));
+        setNewTodo("");
+      })
+      .catch((error: AxiosError) => {
+        console.log(error.message);
+      });
   };
 
   const handleTodoChange = (event: React.FormEvent<HTMLInputElement>) => {

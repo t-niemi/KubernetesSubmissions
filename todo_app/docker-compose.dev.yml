@@ -23,6 +23,19 @@ services:
     user: node
     container_name: backend
 
+  backend-service-dev:
+    image: backend-service-dev
+    build:
+        context: backend
+        dockerfile: dev.Dockerfile # This will simply tell which dockerfile to read
+    ports:
+      - 3001:3000
+    volumes:
+      - ./backend:/app
+      #- node_modules:/app/node_modules
+    user: node
+    container_name: backend-service
+
 #volumes:
 #  node_modules:
 

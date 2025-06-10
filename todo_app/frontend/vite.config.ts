@@ -10,6 +10,10 @@ export default defineConfig({
         target: "http://backend:3000",
         changeOrigin: true,
       },
+      "/todos": {
+        target: "http://backend-service:3000",
+        changeOrigin: true,
+      },
     },
   },
 });
