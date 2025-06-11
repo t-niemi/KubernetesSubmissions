@@ -17,3 +17,4 @@
 - [1.13.](https://github.com/t-niemi/KubernetesSubmissions/tree/1.13/todo_app)
 - [2.1.](https://github.com/t-niemi/KubernetesSubmissions/tree/2.1/log_output)
 - [2.2.](https://github.com/t-niemi/KubernetesSubmissions/tree/2.2/todo_app)
+- [2.3.](https://github.com/t-niemi/KubernetesSubmissions/tree/2.3/log_output)
