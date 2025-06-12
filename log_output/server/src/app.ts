@@ -16,24 +16,47 @@ const fileExists = async (path: fs.PathLike) => {
 
 app.get("/", async (_req, res) => {
   try {
+    const outPath = "files/out.txt";
+    const configPath = "/config/information.txt";
     if (
-      !(await fileExists("files/out.txt")) //||
+      !(await fileExists(outPath)) //||
       //!(await fileExists("pingpong/out.txt"))
     ) {
-      res.send("");
+      res.send("Did not find out-file!");
       return;
     }
-    const status = (await fs.promises.readFile("files/out.txt", "utf-8")).split(
+    const status = (await fs.promises.readFile(outPath, "utf-8")).split(
       /\r?\n/
     );
+    //const pings = await fs.promises.readFile("pingpong/out.txt", "utf-8");
+
     if (status.length < 2) {
-      res.send("");
+      res.send("Status not available!");
       return;
     }
-    //const pings = await fs.promises.readFile("pingpong/out.txt", "utf-8");
+
+    if (
+      !(await fileExists(configPath)) //||
+    ) {
+      res.send("Config missing!");
+      return;
+    }
+    const configMessage = await fs.promises.readFile(configPath, "utf-8");
+
     const response = await fetch("http://ping-pong-svc:2345/pings");
     const pings = await response.text();
-    res.send(status[status.length - 2] + "<br/>" + "Ping / Pongs: " + pings);
+    res.send(
+      "file content: " +
+        configMessage +
+        "<br/>" +
+        "env variable: MESSAGE=" +
+        process.env.MESSAGE +
+        "<br/>" +
+        status[status.length - 2] +
+        "<br/>" +
+        "Ping / Pongs: " +
+        pings
+    );
   } catch (err) {
     console.error(err);
   }

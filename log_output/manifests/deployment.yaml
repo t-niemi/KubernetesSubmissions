@@ -19,6 +19,14 @@ spec:
 #        - name: shared-ping-pong-output
 #          persistentVolumeClaim:
 #            claimName: ping-pong-claim
+        - name: config
+          configMap:
+            # Provide the name of the ConfigMap you want to mount.
+            name: log-output-cm
+            # An array of keys from the ConfigMap to create as files
+            items:
+            - key: "information.txt"
+              path: "information.txt"
       containers:
         - name: log-output-generator
           image: tniemi/dwk-log-output-generator:1.11
@@ -26,9 +34,18 @@ spec:
             - name: shared-log-output
               mountPath: /app/files
         - name: log-output-server
-          image: tniemi/dwk-log-output-server:2.1
+          image: tniemi/dwk-log-output-server:2.5
+          env:
+          - name: MESSAGE
+            valueFrom:
+              configMapKeyRef:
+                name: log-output-cm
+                key: message
           volumeMounts:
             - name: shared-log-output
               mountPath: /app/files
 #            - name: shared-ping-pong-output
 #              mountPath: /app/pingpong
+            - name: config
+              mountPath: "/config"
+              readOnly: true
