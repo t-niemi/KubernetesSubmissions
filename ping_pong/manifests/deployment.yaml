@@ -19,7 +19,19 @@ spec:
 #            claimName: ping-pong-claim
       containers:
         - name: ping-pong
-          image: tniemi/dwk-ping-pong:2.1
+          image: tniemi/dwk-ping-pong:2.7
+          envFrom:
+            - secretRef:
+                name: pg-password
+          env:
+          - name: PORT
+            value: "3000"
+          - name: DB_HOST
+            value: "pg-svc"
+          - name: DB_USER
+            value: "postgres"
+          - name: DB_NAME
+            value: "postgres"
 #          volumeMounts:
 #            - name: shared-ping-pong-output
 #              mountPath: /app/files
