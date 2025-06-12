@@ -21,7 +21,10 @@ const updateImg = async (path: string) => {
     return;
   } catch {
     try {
-      await download("https://picsum.photos/1200", path);
+      if (!process.env.PIC_URL) {
+        throw new Error("PIC_URL env-variable missing!");
+      }
+      await download(process.env.PIC_URL, path);
     } catch (err) {
       console.log(err);
     }
