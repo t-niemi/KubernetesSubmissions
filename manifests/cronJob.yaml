@@ -1,0 +1,20 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: addtodo-cj
+  namespace: project
+spec:
+  schedule: "@hourly"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: job
+            image: tniemi/dwk-jobs:2.9
+            env:
+            - name: SERVER
+              value: "http://todo-backend-svc:2345/todos"
+            command:
+            - addTodo
+          restartPolicy: Never

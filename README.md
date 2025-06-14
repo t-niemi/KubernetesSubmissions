@@ -23,4 +23,5 @@
 - [2.6.](https://github.com/t-niemi/KubernetesSubmissions/tree/2.6/todo_app)
 - [2.7.](https://github.com/t-niemi/KubernetesSubmissions/tree/2.7/ping_pong)
 - [2.8.](https://github.com/t-niemi/KubernetesSubmissions/tree/2.8/todo_app)
+- [2.9.](https://github.com/t-niemi/KubernetesSubmissions/tree/2.9/manifests)
 
