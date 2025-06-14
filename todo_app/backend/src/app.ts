@@ -1,7 +1,50 @@
 import express, { NextFunction, Request, Response } from "express";
+import {
+  CreationOptional,
+  DataTypes,
+  InferAttributes,
+  InferCreationAttributes,
+  Model,
+  Sequelize,
+} from "sequelize";
 
 const app = express();
 app.use(express.json());
+
+const sequelize = new Sequelize(
+  process.env.DB_NAME!,
+  process.env.DB_USER!,
+  process.env.POSTGRES_PASSWORD,
+  {
+    host: process.env.DB_HOST,
+    dialect: "postgres",
+    logging: false,
+  }
+);
+
+const start = async (): Promise<void> => {
+  try {
+    await sequelize.sync();
+  } catch (error) {
+    console.error(error);
+    //process.exit(1);
+  }
+};
+
+void start();
+
+class Todo extends Model<InferAttributes<Todo>, InferCreationAttributes<Todo>> {
+  declare id: CreationOptional<number>;
+  declare content: string;
+}
+
+Todo.init(
+  {
+    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+    content: { type: DataTypes.STRING(140), allowNull: false },
+  },
+  { sequelize, underscored: true, timestamps: false, modelName: "todo" }
+);
 
 const errorHandler = (
   error: Error,
@@ -10,87 +53,38 @@ const errorHandler = (
   next: NextFunction
 ) => {
   console.error(error.name);
-
-  if (error.name === "SyntaxError") {
-    response.status(400).send({ error: error.message });
-  }
+  response.status(400).send({ error: error.message });
   next(error);
 };
 
-const todos: Todo[] = [
-  {
-    id: 1,
-    content: "Learn JavaScript",
-  },
-  {
-    id: 2,
-    content: "Learn React",
-  },
-  {
-    id: 3,
-    content: "Build a project",
-  },
-];
-
-interface Todo {
-  id: number;
-  content: string;
-}
-export type NewTodo = Omit<Todo, "id">;
-
-const isString = (text: unknown): text is string => {
-  return typeof text === "string" || text instanceof String;
-};
-
-const parseContent = (content: unknown): string => {
-  if (!isString(content)) {
-    throw new Error("Incorrect or missing content");
-  }
-  return content;
-};
-
-const toNewTodo = (object: unknown) => {
-  if (!object || typeof object !== "object") {
-    throw new Error("Incorrect or missing data");
-  }
-  if ("content" in object) {
-    const newEntry: NewTodo = {
-      content: parseContent(object.content),
-    };
-    return newEntry;
-  }
-  throw new Error("Incorrect data: some fields are missing");
-};
-
-const addTodo = (entry: NewTodo) => {
-  const max = todos.reduce((acc, cur) => {
-    return Math.max(acc, cur.id);
-  }, Number.NEGATIVE_INFINITY);
-
-  const newTodo = {
-    id: max + 1,
-    ...entry,
-  };
-
-  todos.push(newTodo);
-  return newTodo;
-};
-
-app.post("/todos", (req, res) => {
+app.post("/todos", async (req, res, next) => {
   try {
-    const newTodo = toNewTodo(req.body);
-    res.json(addTodo(newTodo));
+    const todo = await Todo.create(req.body as Todo, { fields: ["content"] });
+    res.json(todo);
   } catch (error: unknown) {
-    let errorMessage = "Something went wrong.";
-    if (error instanceof Error) {
-      errorMessage += " Error: " + error.message;
-    }
-    res.status(400).send(errorMessage);
+    next(error);
   }
 });
 
-app.get("/todos", (_req, res: Response<Todo[]>) => {
-  res.send(todos);
+app.delete("/todos/:id", async (req, res, next) => {
+  try {
+    await Todo.destroy({
+      where: {
+        id: req.params.id,
+      },
+    });
+    res.status(204).end();
+  } catch (error: unknown) {
+    next(error);
+  }
+});
+
+app.get("/todos", async (_req, res, next) => {
+  try {
+    res.json(await Todo.findAll());
+  } catch (error: unknown) {
+    next(error);
+  }
 });
 
 app.use(errorHandler);

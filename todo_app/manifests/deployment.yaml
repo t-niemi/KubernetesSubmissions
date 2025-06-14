@@ -46,7 +46,16 @@ spec:
     spec:
       containers:
         - name: todo-backend
-          image: tniemi/dwk-todo-backend:2.2
+          image: tniemi/dwk-todo-backend:2.8
+          envFrom:
+            - secretRef:
+                name: pg-password
           env:
           - name: PORT
             value: "3000"
+          - name: DB_HOST
+            value: "pg-svc"
+          - name: DB_USER
+            value: "postgres"
+          - name: DB_NAME
+            value: "postgres"

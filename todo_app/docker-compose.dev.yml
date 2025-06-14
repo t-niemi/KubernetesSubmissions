@@ -33,8 +33,21 @@ services:
     volumes:
       - ./backend:/app
       #- node_modules:/app/node_modules
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - DB_HOST=db
+      - DB_USER=postgres
+      - DB_NAME=postgres
     user: node
     container_name: backend-service
+
+  db:
+    image: postgres
+    #volumes:
+    #  - ./database:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=postgres
+    container_name: db
 
 #volumes:
 #  node_modules:

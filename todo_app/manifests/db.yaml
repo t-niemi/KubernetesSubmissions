@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: pg-stset
+  namespace: project
+spec:
+  serviceName: pg-svc
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pgapp
+  template:
+    metadata:
+      labels:
+        app: pgapp
+    spec:
+      containers:
+        - name: pg
+          image: postgres:17
+          envFrom:
+            - secretRef:
+                name: pg-password
+          ports:
+            - name: postgres
+              containerPort: 5432
+          volumeMounts:
+            - name: pg-data-storage
+              mountPath: /var/lib/postgresql/data
+  volumeClaimTemplates:
+    - metadata:
+        name: pg-data-storage
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: local-path
+        resources:
+          requests:
+            storage: 100Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pg-svc
+  namespace: project
+  labels:
+    app: pg
+spec:
+  ports:
+  - port: 6379
+    name: web
+  clusterIP: None
+  selector:
+    app: pgapp
+
