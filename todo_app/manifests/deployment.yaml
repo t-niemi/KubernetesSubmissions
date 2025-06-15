@@ -46,7 +46,7 @@ spec:
     spec:
       containers:
         - name: todo-backend
-          image: tniemi/dwk-todo-backend:2.8
+          image: tniemi/dwk-todo-backend:2.10
           envFrom:
             - secretRef:
                 name: pg-password

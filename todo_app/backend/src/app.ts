@@ -60,6 +60,7 @@ const errorHandler = (
 app.post("/todos", async (req, res, next) => {
   try {
     const todo = await Todo.create(req.body as Todo, { fields: ["content"] });
+    console.log("Added", todo);
     res.json(todo);
   } catch (error: unknown) {
     next(error);
